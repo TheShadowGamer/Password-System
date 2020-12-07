@@ -15,7 +15,7 @@ module.exports = class PasswordFolder extends Plugin {
     async startPlugin() {
         //REQUIRE
         const menu = await getModule(["MenuItem"])
-        const GuildFolderContextMenu = await require('powercord/webpack').getModule(m => m.default && m.default.displayName === 'GuildFolderContextMenu');
+        const GuildFolderContextMenu = await getModule(m => m.default && m.default.displayName === 'GuildFolderContextMenu');
         //END REQUIRE
         //REGISTER SETTINGS
         powercord.api.settings.registerSettings("Password-Folders", {

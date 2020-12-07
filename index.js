@@ -24,6 +24,30 @@ module.exports = class PasswordFolder extends Plugin {
             render: Settings
         })
         //END REGISTER SETTINGS
+        //REGISTER COMMANDS
+        powercord.api.commands.registerCommand({
+            command: "lock",
+            description: "Locks discord",
+            usage: '{c}',
+            executor: async () => {
+                const enabled = await this.settings.get("lockDiscord")
+                if(enabled === false || !enabled) return {
+					send: false,
+					result: 'The lock discord setting is disabled!'
+				};
+                const password = await this.settings.get("password_Discord")
+                if(!password) return {
+					send: false,
+					result: 'There is no password configured!'
+				};
+                const {openModal: openNewModal} = getModule(['openModal'], false)
+                const e = await getModule(m => m.app && Object.keys(m).length === 1, false).app
+                const app = await document.querySelector(`.${e}`)
+                app.remove()
+                openNewModal((props) => React.createElement(unlockDiscord, {settings: this.settings, app: app, ...props}), {onCloseRequest: () => {}})
+            }
+        })
+        //END REGISTER COMMANDS
         //BIND FUNCTIONS
         this.folderExpand = this.folderExpand.bind(this);
         this.onDiscordStart = this.onDiscordStart.bind(this);
@@ -85,6 +109,7 @@ module.exports = class PasswordFolder extends Plugin {
     pluginWillUnload() {
         uninject('password-button')
         powercord.api.settings.unregisterSettings('Password-Folders')
+        powercord.api.commands.unregisterCommand('lock');
         FluxDispatcher.unsubscribe('TOGGLE_GUILD_FOLDER_EXPAND', this.folderExpand)
     }
 

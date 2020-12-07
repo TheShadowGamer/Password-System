@@ -53,7 +53,6 @@ module.exports = class unlockFolder extends React.Component {
                         }}
                     >Unlock</Button>
                     <Button
-                        disabled={!this.state.userHasInputed}
                         onClick={() => {
                             return closeModal()
                         }}

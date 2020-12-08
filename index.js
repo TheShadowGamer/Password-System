@@ -11,6 +11,7 @@ const managePassword = require("./components/managePassword");
 const Settings = require("./components/settings")
 const unlockDiscord = require("./components/unlockDiscord")
 
+let _this
 module.exports = class PasswordFolder extends Plugin {
     async startPlugin() {
         //REQUIRE
@@ -24,34 +25,22 @@ module.exports = class PasswordFolder extends Plugin {
             render: Settings
         })
         //END REGISTER SETTINGS
+        //BIND FUNCTIONS
+        this.folderExpand = this.folderExpand.bind(this);
+        this.lockDiscord = this.lockDiscord.bind(this);
+        _this = this
+        //END BUND FUNCTIONS
         //REGISTER COMMANDS
         powercord.api.commands.registerCommand({
             command: "lock",
             description: "Locks discord",
             usage: '{c}',
-            executor: async () => {
-                const enabled = await this.settings.get("lockDiscord")
-                if(enabled === false || !enabled) return {
-					send: false,
-					result: 'The lock discord setting is disabled!'
-				};
-                const password = await this.settings.get("password_Discord")
-                if(!password) return {
-					send: false,
-					result: 'There is no password configured!'
-				};
-                const {openModal: openNewModal} = getModule(['openModal'], false)
-                const e = await getModule(m => m.app && Object.keys(m).length === 1, false).app
-                const app = await document.querySelector(`.${e}`)
-                app.remove()
-                openNewModal((props) => React.createElement(unlockDiscord, {settings: this.settings, app: app, ...props}), {onCloseRequest: () => {}})
-            }
+            executor: this.lockDiscord
         })
         //END REGISTER COMMANDS
-        //BIND FUNCTIONS
-        this.folderExpand = this.folderExpand.bind(this);
-        this.onDiscordStart = this.onDiscordStart.bind(this);
-        //END BUND FUNCTIONS
+        //KEYBIND TO LOCK DISCORD
+        document.body.addEventListener("keydown", this.keydown)
+        //END KEYBIND TO LOCK DISCORD
         //INJECTION
         inject('password-button', GuildFolderContextMenu, 'default', (args, res) => {
             if(!this.settings.get(args[0].folderId.toString())) {
@@ -98,7 +87,7 @@ module.exports = class PasswordFolder extends Plugin {
             if (!ConnectionStore.isConnected()) return;
 
             ConnectionStore.removeChangeListener(listener)
-            this.onDiscordStart()
+            this.lockDiscord()
         }
         if (ConnectionStore.isConnected()) listener()
         else ConnectionStore.addChangeListener(listener)
@@ -146,7 +135,7 @@ module.exports = class PasswordFolder extends Plugin {
             }
         }
     }
-    async onDiscordStart () {
+    async lockDiscord () {
         const enabled = await this.settings.get("lockDiscord")
         if(enabled === false || !enabled) return;
         const password = await this.settings.get("password_Discord")
@@ -156,5 +145,10 @@ module.exports = class PasswordFolder extends Plugin {
         const app = await document.querySelector(`.${e}`)
         app.remove()
         openNewModal((props) => React.createElement(unlockDiscord, {settings: this.settings, app: app, ...props}), {onCloseRequest: () => {}})
+    }
+    async keydown(event) {
+        if(event.key.toUpperCase() === "F8") {
+            _this.lockDiscord()
+        }
     }
 }

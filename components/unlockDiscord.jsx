@@ -50,8 +50,10 @@ module.exports = class unlockDiscord extends React.Component {
                                 return modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
                             }
                             this.setState({ incorrect: true })
-                            if(this.props.settings.get("rickroll") === true) {
-                                electron.shell.openExternal("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO")
+                            if(this.props.settings.get("openLink") === true) {
+                                if(this.props.settings.get("LinkToOpen")) {
+                                    electron.shell.openExternal(this.props.settings.get("LinkToOpen"))
+                                }
                             }
                             this.render()
                         }}

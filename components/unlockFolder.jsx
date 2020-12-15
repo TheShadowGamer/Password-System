@@ -52,15 +52,13 @@ module.exports = class unlockFolder extends React.Component {
                             this.props.settings.set("unlocked_" + this.props.args[0].folderId.toString(), false)
                         }}
                     >Unlock</Button>
-                    <button
-                        type="button"
-                        class="button-38aScr lookLink-9FtZy- colorPrimary-3b3xI6 sizeMedium-1AC_Sl grow-q77ONN"
-                        onClick={() => {
-                            return closeModal()
-                        }}
+                    <Button
+                        onClick={closeModal}
+                        look={Button.Looks.LINK}
+                        color={Button.Colors.TRANSPARENT}
                     >
-                    <div class="contents-18-Yxp"></div>
-                    Cancel</button>
+                        Cancel
+                    </Button>
                 </Modal.Footer>
             </Modal>
         );

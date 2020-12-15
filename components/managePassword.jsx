@@ -118,10 +118,12 @@ module.exports = class addPasswordMenu extends React.Component {
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
-                        onClick={() => {
-                            closeModal()
-                        }}
-                    >Cancel</Button>
+                        onClick={closeModal}
+                        look={Button.Looks.LINK}
+                        color={Button.Colors.TRANSPARENT}
+                    >
+                        Cancel
+                    </Button>
                 </Modal.Footer>
             </Modal>
         );

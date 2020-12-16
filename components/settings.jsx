@@ -40,7 +40,7 @@ module.exports = class Settings extends React.Component {
                 {this.props.getSetting("lockDiscord", false) && (
                     <div>
                         <TextAreaInput
-                            placeholder={atob(this.props.getSetting("password_Discord"))}
+                            placeholder={atob(this.props.getSetting("password_Discord", ''))}
                             onChange={async (o) => {
                                 await this.setState({ password: o.toString() });
                                 this.hasUserInputed();

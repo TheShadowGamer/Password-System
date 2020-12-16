@@ -1,6 +1,6 @@
 //Require Things
 const { Plugin } = require('powercord/entities')
-const { getModule, React, FluxDispatcher, ReactDOM } = require('powercord/webpack')
+const { getModule, React, FluxDispatcher } = require('powercord/webpack')
 const { inject, uninject } = require('powercord/injector')
 const { open } = require("powercord/modal");
 
@@ -14,6 +14,14 @@ const unlockDiscord = require("./components/unlockDiscord")
 let _this
 module.exports = class PasswordFolder extends Plugin {
     async startPlugin() {
+        const enabled = await this.settings.get("lockDiscord")
+        if(enabled === false || !enabled) {
+            const lastChangelog = this.settings.get('last_changelog', '');
+            if (changelog.id !== lastChangelog) {
+                const changeLogExports = require("./components/changelog/changelogExports")
+                changeLogExports.openChangeLogs(this.settings)
+            }
+        }
         //REQUIRE
         const menu = await getModule(["MenuItem"])
         const GuildFolderContextMenu = await getModule(m => m.default && m.default.displayName === 'GuildFolderContextMenu');

@@ -52,7 +52,6 @@ module.exports = class Settings extends React.Component {
                             onClick={() => {
                                 this.props.updateSetting("password_Discord", btoa(this.state.password))
                             }}
-                            hidden={true}
                         >Set Password</Button>
                         <br></br>
                         <SwitchItem
@@ -76,7 +75,6 @@ module.exports = class Settings extends React.Component {
                                     onClick={() => {
                                         this.props.updateSetting("LinkToOpen", this.state.link)
                                     }}
-                                    hidden={true}
                                 >Set Link</Button>
                             </div>
                         )}

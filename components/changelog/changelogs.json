@@ -13,7 +13,8 @@
         "list": [
           "Added a Hotkey to lock discord. (F8)",
           "Added a command to lock discord.",
-          "Added a option to redirect to a specific url if the password is incorrect."
+          "Added a option to redirect to a specific url if the password is incorrect.",
+          "Added the ability to lock inidividual servers."
         ]
       }
     ],

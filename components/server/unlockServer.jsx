@@ -4,7 +4,7 @@ const { TextAreaInput } = require("powercord/components/settings");
 const { Modal } = require("powercord/components/modal");
 const { close: closeModal } = require("powercord/modal");
 
-module.exports = class unlockFolder extends React.Component {
+module.exports = class unlockServer extends React.Component {
     constructor(props) {
         super(props);
 
@@ -26,7 +26,7 @@ module.exports = class unlockFolder extends React.Component {
         return (
             <Modal className="powercord-text">
                 <Modal.Header>
-                    <FormTitle tag="h4">Unlock Folder</FormTitle>
+                    <FormTitle tag="h4">Unlock Server</FormTitle>
                 </Modal.Header>
                 <Modal.Content>
                     <TextAreaInput
@@ -42,25 +42,23 @@ module.exports = class unlockFolder extends React.Component {
                     <Button
                         disabled={!this.state.userHasInputed}
                         onClick={() => {
-                            const password = this.props.settings.get(this.props.args[0].folderId.toString())
+                            const password = this.props.settings.get(this.props.args[0].guild.id.toString())
                             if(btoa(this.state.password) === password) {
-                                this.props.settings.set("unlocked_" + this.props.args[0].folderId.toString(), true)
+                                this.props.settings.set("unlocked_" + this.props.args[0].guild.id.toString(), true)
                                 return closeModal()
                             }
                             this.setState({ incorrect: true })
                             this.render()
-                            this.props.settings.set("unlocked_" + this.props.args[0].folderId.toString(), false)
+                            this.props.settings.set("unlocked_" + this.props.args[0].guild.id.toString(), false)
                         }}
                     >Unlock</Button>
-                    <button
-                        type="button"
-                        class="button-38aScr lookLink-9FtZy- colorPrimary-3b3xI6 sizeMedium-1AC_Sl grow-q77ONN"
-                        onClick={() => {
-                            return closeModal()
-                        }}
+                    <Button
+                        onClick={closeModal}
+                        look={Button.Looks.LINK}
+                        color={Button.Colors.TRANSPARENT}
                     >
-                    <div class="contents-18-Yxp"></div>
-                    Cancel</button>
+                        Cancel
+                    </Button>
                 </Modal.Footer>
             </Modal>
         );

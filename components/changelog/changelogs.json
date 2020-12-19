@@ -1,0 +1,23 @@
+{
+  "id": "update-2020-12-19",
+  "date": "2020-12-19",
+  "contents": [
+    {
+      "type": "HEADER",
+      "color": "GREEN",
+      "text": "Update!",
+      "noMargin": false
+    },
+    {
+      "type": "CONTENTS",
+      "list": [
+        "Added a Hotkey to lock discord. (F8)",
+        "Added a command to lock discord.",
+        "Added a option to redirect to a specific url if the password is incorrect.",
+        "Added the ability to lock inidividual servers. (Could be buggy)"
+      ]
+    }
+  ],
+  "footer": "These suggestions were made by Chromus-dev! Make suggestions you have on the GitHub!"
+}
+  

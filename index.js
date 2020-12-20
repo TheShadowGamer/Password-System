@@ -33,8 +33,8 @@ module.exports = class PasswordFolder extends Plugin {
         const GuildContextMenu = await getModule(m => m.default && m.default.displayName === 'GuildContextMenu');
         //END REQUIRE
         //REGISTER SETTINGS
-        powercord.api.settings.registerSettings("Password-Folders", {
-            label: "Password Folders",
+        powercord.api.settings.registerSettings("Password-System", {
+            label: "Password System",
             category: this.entityID,
             render: Settings
         })
@@ -151,7 +151,7 @@ module.exports = class PasswordFolder extends Plugin {
     pluginWillUnload() {
         uninject('folder-password')
         uninject('server-password')
-        powercord.api.settings.unregisterSettings('Password-Folders')
+        powercord.api.settings.unregisterSettings('Password-System')
         powercord.api.commands.unregisterCommand('lock');
         FluxDispatcher.unsubscribe('TOGGLE_GUILD_FOLDER_EXPAND', this.folderExpand)
         FluxDispatcher.unsubscribe('CHANNEL_SELECT', this.selectChannel)

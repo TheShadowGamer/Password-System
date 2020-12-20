@@ -59,7 +59,7 @@ module.exports = class unlockDiscord extends React.Component {
                             this.setState({ incorrect: true })
                             if(this.props.settings.get("openLink") === true) {
                                 if(this.props.settings.get("LinkToOpen")) {
-                                    electron.shell.openExternal(this.props.settings.get("LinkToOpen"))
+                                    electron.shell.openExternal(this.props.settings.get("LinkToOpen", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
                                 }
                             }
                             this.render()

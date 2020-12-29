@@ -1,9 +1,10 @@
 //Require Things
 const { Plugin } = require('powercord/entities')
-const { getModule, React, FluxDispatcher } = require('powercord/webpack')
+const { getModule, React, FluxDispatcher, i18n: { Messages } } = require('powercord/webpack')
 const { inject, uninject } = require('powercord/injector')
 const { selectChannel } = getModule(['selectChannel'], false)
 const { open } = require("powercord/modal");
+const i18n = require('./i18n');
 
 //JSX Files
 const addFolderPasswordMenu = require("./components/folder/addPasswordMenu")
@@ -19,6 +20,7 @@ const changelog = require("./components/changelog/changelogs.json")
 let _this
 module.exports = class PasswordFolder extends Plugin {
     async startPlugin() {
+        powercord.api.i18n.loadAllStrings(i18n);
         const enabled = await this.settings.get("lockDiscord")
         if(enabled === false || !enabled) {
             const lastChangelog = this.settings.get('last_changelog', '');
@@ -61,7 +63,7 @@ module.exports = class PasswordFolder extends Plugin {
             if(!this.settings.get(args[0].folderId.toString())) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'set-password-folder',
-                    label: 'Set Password',
+                    label: Messages.SET_PASSWORD,
                     action: () => {
                         open(() => React.createElement(addFolderPasswordMenu, { settings: this.settings, args: args }))
                     } 
@@ -71,7 +73,7 @@ module.exports = class PasswordFolder extends Plugin {
             if(this.settings.get("unlocked_" + args[0].folderId.toString()) == false) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'unlock-folder',
-                    label: 'Unlock Folder',
+                    label: Messages.UNLOCK_FOLDER,
                     action: () => {
                         open(() => React.createElement(unlockFolder, { settings: this.settings, args: args }))
                     } 
@@ -80,14 +82,14 @@ module.exports = class PasswordFolder extends Plugin {
             if(this.settings.get("unlocked_" + args[0].folderId.toString()) == true) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'lock-folder',
-                    label: 'Lock Folder',
+                    label: Messages.LOCK_FOLDER,
                     action: () => this.settings.set("unlocked_" + args[0].folderId.toString(), false)
                 }))
                 
             }
             res.props.children.unshift(React.createElement(menu.MenuItem, {
                 id: 'manage-password',
-                label: 'Manage Password',
+                label: Messages.MANAGE_PASSWORD,
                 action: () => open(() => React.createElement(manageFolderPassword, { settings: this.settings, args: args }))
             }))
             return res
@@ -98,7 +100,7 @@ module.exports = class PasswordFolder extends Plugin {
             if(!this.settings.get(args[0].guild.id.toString())) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'set-password-server',
-                    label: 'Set Password',
+                    label: Messages.SET_PASSWORD,
                     action: () => {
                         open(() => React.createElement(addServerPasswordMenu, { settings: this.settings, args: args }))
                     } 
@@ -108,7 +110,7 @@ module.exports = class PasswordFolder extends Plugin {
             if(this.settings.get("unlocked_" + args[0].guild.id.toString()) == false) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'unlock-server',
-                    label: 'Unlock Server',
+                    label: Messages.UNLOCK_SERVER,
                     action: () => {
                         open(() => React.createElement(unlockServer, { settings: this.settings, args: args }))
                     } 
@@ -117,14 +119,14 @@ module.exports = class PasswordFolder extends Plugin {
             if(this.settings.get("unlocked_" + args[0].guild.id.toString()) == true) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'lock-server',
-                    label: 'Lock Server',
+                    label: Messages.LOCK_SERVER,
                     action: () => this.settings.set("unlocked_" + args[0].guild.id.toString(), false)
                 }))
                 
             }
             res.props.children.unshift(React.createElement(menu.MenuItem, {
                 id: 'manage-password',
-                label: 'Manage Password',
+                label: Messages.MANAGE_PASSWORD,
                 action: () => open(() => React.createElement(manageServerPassword, { settings: this.settings, args: args }))
             }))
             return res
@@ -168,18 +170,18 @@ module.exports = class PasswordFolder extends Plugin {
                 if(expandedFolders.has(folder.folderId)) {
                     toggleGuildFolderExpand(folder.folderId)
                     powercord.api.notices.sendToast('FolderLocked', {
-                        header: 'Folder Locked!', // required
-                        content: 'This folder is locked! Please unlock the folder first!',
+                        header: Messages.FOLDER_LOCKED, // required
+                        content: Messages.FOLDER_LOCKED_DESCRIPTION,
                         type: 'info',
                         timeout: 10e3,
                         buttons: [
                             {
-                                text: 'Okay',
+                                text: Messages.OKAY,
                                 size: 'medium',
                                 look: 'outlined'
                             },
                             {
-                                text: 'Unlock',
+                                text: Messages.UNLOCK,
                                 size: 'medium',
                                 look: 'outlined',
                                 onClick: () => open(() => React.createElement(unlockFolder, { settings: this.settings, args: [{folderId: folder.folderId}] }))
@@ -200,18 +202,18 @@ module.exports = class PasswordFolder extends Plugin {
             if(unlocked === false) {
                 selectChannel(this.lastChannel.guildId, this.lastChannel.channelId)
                 powercord.api.notices.sendToast('ServerLocked', {
-                    header: 'Server Locked!', // required
-                    content: 'This server is locked! Please unlock the server first!',
+                    header: Messages.SERVER_LOCKED, // required
+                    content: Messages.SERVER_LOCKED_DESCRIPTION,
                     type: 'info',
                     timeout: 10e3,
                     buttons: [
                         {
-                            text: 'Okay',
+                            text: Messages.OKAY,
                             size: 'medium',
                             look: 'outlined'
                         },
                         {
-                            text: 'Unlock',
+                            text: Messages.UNLOCK,
                             size: 'medium',
                             look: 'outlined',
                             onClick: () => open(() => React.createElement(unlockServer, { settings: this.settings, args: [{guild: {id: channel.guildId}}] }))

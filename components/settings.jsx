@@ -1,4 +1,4 @@
-const { React } = require('powercord/webpack');
+const { React, i18n: { Messages }  } = require('powercord/webpack');
 const { TextAreaInput } = require("powercord/components/settings");
 const { Button } = require("powercord/components");
 const { SwitchItem } = require('powercord/components/settings');
@@ -36,7 +36,7 @@ module.exports = class Settings extends React.Component {
                     onChange={() => {
                         this.props.toggleSetting('lockDiscord', false)
                     }}
-                >Discord Password</SwitchItem>
+                >{Messages.DISCORD_PASSWORD}</SwitchItem>
                 {this.props.getSetting("lockDiscord", false) && (
                     <div>
                         <TextAreaInput
@@ -46,20 +46,20 @@ module.exports = class Settings extends React.Component {
                                 this.hasUserInputed();
                             }}
                             rows={1}
-                        >Password</TextAreaInput>
+                        >{Messages.PASSWORD}</TextAreaInput>
                         <Button
                             disabled={!this.state.userHasInputed}
                             onClick={() => {
                                 this.props.updateSetting("password_Discord", btoa(this.state.password))
                             }}
-                        >Set Password</Button>
+                        >{Messages.SET_PASSWORD}</Button>
                         <br></br>
                         <SwitchItem
                             value={this.props.getSetting("openLink", false)}
                             onChange={() => {
                                 this.props.toggleSetting('openLink')
                             }}
-                        >Open a link if the password is incorrect</SwitchItem>
+                        >{Messages.OPEN_LINK}</SwitchItem>
                         {this.props.getSetting("openLink", false) && (
                             <div>
                                 <TextAreaInput
@@ -69,13 +69,13 @@ module.exports = class Settings extends React.Component {
                                         this.hasUserInputedLink();
                                     }}
                                     rows={1}
-                                >Link to open</TextAreaInput>
+                                >{Messages.LINK_TO_OPEN}</TextAreaInput>
                                 <Button
                                     disabled={!this.state.userHasInputedLink}
                                     onClick={() => {
                                         this.props.updateSetting("LinkToOpen", this.state.link)
                                     }}
-                                >Set Link</Button>
+                                >{Messages.SET_LINK}</Button>
                             </div>
                         )}
                     </div>

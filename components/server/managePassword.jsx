@@ -1,4 +1,4 @@
-const { React } = require("powercord/webpack");
+const { React, i18n: { Messages }  } = require("powercord/webpack");
 const { FormTitle, Button } = require("powercord/components");
 const { TextAreaInput } = require("powercord/components/settings");
 const { Modal } = require("powercord/components/modal");
@@ -37,7 +37,7 @@ module.exports = class addPasswordMenu extends React.Component {
         return (
             <Modal className="powercord-text">
                 <Modal.Header>
-                    <FormTitle tag="h4">Manage Password</FormTitle>
+                    <FormTitle tag="h4">{Messages.MANAGE_PASSWORD}</FormTitle>
                 </Modal.Header>
                 <Modal.Content>
                     <table>
@@ -49,7 +49,7 @@ module.exports = class addPasswordMenu extends React.Component {
                                         this.hasUserInputed();
                                     }}
                                     rows={1}
-                                >Current Password</TextAreaInput>
+                                >{Messages.CURRENT_PASSWORD}</TextAreaInput>
                             </td>
                             <td>
                                 <TextAreaInput
@@ -58,7 +58,7 @@ module.exports = class addPasswordMenu extends React.Component {
                                         this.hasUserInputed();
                                     }}
                                     rows={1}
-                                >New Password</TextAreaInput>
+                                >{Messages.NEW_PASSWORD}</TextAreaInput>
                             </td>
                             <td>
                                 <Button
@@ -73,12 +73,12 @@ module.exports = class addPasswordMenu extends React.Component {
                                         this.setState({ changeIncorrect: true })
                                         this.render()
                                     }}
-                                >Change Password</Button>
+                                >{Messages.CHANGE_PASSWORD}</Button>
                             </td>
                         </tr>
                         <tr>
                             <td colSpan="3">
-                                <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.changeIncorrect} >That's not the correct password! Please try again!</h5>
+                                <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.changeIncorrect} >{Messages.INCORRECT_PASSWORD}</h5>
                             </td>
                         </tr>
                         <tr>
@@ -89,7 +89,7 @@ module.exports = class addPasswordMenu extends React.Component {
                                         this.hasUserInputedReset()
                                     }}
                                     rows={1}
-                                >Password</TextAreaInput>
+                                >{Messages.PASSWORD}</TextAreaInput>
                             </td>
                             <td>
                                 <div>
@@ -105,13 +105,13 @@ module.exports = class addPasswordMenu extends React.Component {
                                             this.setState({ resetIncorrect: true })
                                             this.render()
                                         }}
-                                    >Remove Password</Button>
+                                    >{Messages.REMOVE_PASSWORD}</Button>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td colSpan="3">
-                                <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.resetIncorrect} >That's not the correct password! Please try again!</h5>
+                                <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.resetIncorrect} >{Messages.INCORRECT_PASSWORD}</h5>
                             </td>
                         </tr>
                     </table>
@@ -122,7 +122,7 @@ module.exports = class addPasswordMenu extends React.Component {
                         look={Button.Looks.LINK}
                         color={Button.Colors.TRANSPARENT}
                     >
-                        Cancel
+                        {Messages.CANCEL}
                     </Button>
                 </Modal.Footer>
             </Modal>

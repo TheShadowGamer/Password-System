@@ -1,4 +1,4 @@
-const { React, getModule } = require("powercord/webpack");
+const { React, getModule, i18n: { Messages } } = require("powercord/webpack");
 const { FormTitle, Button } = require("powercord/components");
 const { TextAreaInput } = require("powercord/components/settings");
 const electron = require("electron")
@@ -27,7 +27,7 @@ module.exports = class unlockDiscord extends React.Component {
         return (
             <Modal.ModalRoot className="powercord-text" transitionState={this.props.transitionState}>
                 <Modal.ModalHeader>
-                    <FormTitle tag="h4">Unlock Discord</FormTitle>
+                    <FormTitle tag="h4">{Messages.UNLOCK_DISCORD}</FormTitle>
                 </Modal.ModalHeader>
                 <Modal.ModalContent>
                     <TextAreaInput
@@ -36,8 +36,8 @@ module.exports = class unlockDiscord extends React.Component {
                             this.hasUserInputed();
                         }}
                         rows={1}
-                    >Password</TextAreaInput>
-                    <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >That's not the correct password! Please try again!</h5>
+                    >{Messages.PASSWORD}</TextAreaInput>
+                    <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.INCORRECT_PASSWORD}</h5>
                 </Modal.ModalContent>
                 <Modal.ModalFooter>
                     <Button
@@ -64,7 +64,7 @@ module.exports = class unlockDiscord extends React.Component {
                             }
                             this.render()
                         }}
-                    >Unlock</Button>
+                    >{Messages.UNLOCK}</Button>
                 </Modal.ModalFooter>
             </Modal.ModalRoot>
         );

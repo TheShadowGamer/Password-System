@@ -1,4 +1,4 @@
-const { React } = require("powercord/webpack");
+const { React, i18n: { Messages } } = require("powercord/webpack");
 const { FormTitle, Button } = require("powercord/components");
 const { TextAreaInput } = require("powercord/components/settings");
 const { Modal } = require("powercord/components/modal");
@@ -26,7 +26,7 @@ module.exports = class unlockFolder extends React.Component {
         return (
             <Modal className="powercord-text">
                 <Modal.Header>
-                    <FormTitle tag="h4">Unlock Folder</FormTitle>
+                    <FormTitle tag="h4">{Messages.UNLOCK_FOLDER}</FormTitle>
                 </Modal.Header>
                 <Modal.Content>
                     <TextAreaInput
@@ -35,8 +35,8 @@ module.exports = class unlockFolder extends React.Component {
                             this.hasUserInputed();
                         }}
                         rows={1}
-                    >Password</TextAreaInput>
-                    <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >That's not the correct password! Please try again!</h5>
+                    >{Messages.PASSWORD}</TextAreaInput>
+                    <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.INCORRECT_PASSWORD}</h5>
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
@@ -51,13 +51,13 @@ module.exports = class unlockFolder extends React.Component {
                             this.render()
                             this.props.settings.set("unlocked_" + this.props.args[0].folderId.toString(), false)
                         }}
-                    >Unlock</Button>
+                    >{Messages.UNLOCK}</Button>
                     <Button
                         onClick={closeModal}
                         look={Button.Looks.LINK}
                         color={Button.Colors.TRANSPARENT}
                     >
-                        Cancel
+                        {Messages.CANCEL}
                     </Button>
                 </Modal.Footer>
             </Modal>

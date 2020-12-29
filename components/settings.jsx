@@ -59,7 +59,7 @@ module.exports = class Settings extends React.Component {
                             onChange={() => {
                                 this.props.toggleSetting('openLink')
                             }}
-                        >{Messages.OPEN_LINK}</SwitchItem>
+                        >{Messages.PS_OPEN_LINK}</SwitchItem>
                         {this.props.getSetting("openLink", false) && (
                             <div>
                                 <TextAreaInput

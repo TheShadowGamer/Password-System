@@ -21,7 +21,7 @@
     "REMOVE_PASSWORD": "Remove Password",
     "ADD_PASSWORD_SERVER": "Add Password to Server",
     "DISCORD_PASSWORD": "Discord Password",
-    "OPEN_LINK": "Open a link if the password is incorrect",
+    "PS_OPEN_LINK": "Open a link if the password is incorrect",
     "LINK_TO_OPEN": "Link to open",
     "SET_LINK": "Set Link",
     "UNLOCK_DISCORD": "Unlock Discord"

@@ -1,6 +1,6 @@
 const { React, i18n: { Messages }  } = require("powercord/webpack");
 const { FormTitle, Button } = require("powercord/components");
-const { TextAreaInput } = require("powercord/components/settings");
+const TextInputWithButton = require("../TextInputWithButton")
 const { Modal } = require("powercord/components/modal");
 const { close: closeModal } = require("powercord/modal");
 
@@ -10,8 +10,11 @@ module.exports = class addPasswordMenu extends React.Component {
 
         this.state = {
             password: "",
+            hidePassword: false,
             newPassword: "",
+            hideNewPassword: false,
             resetPassword: "",
+            hideResetPassword: false,
             userHasInputed: false,
             userHasInputedReset: false,
             changeIncorrect: false,
@@ -43,22 +46,48 @@ module.exports = class addPasswordMenu extends React.Component {
                     <table>
                         <tr>
                             <td>
-                            <TextAreaInput
-                                onChange={async (o) => {
+                                <TextInputWithButton
+                                    textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
+                                    buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
+                                    buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hidePassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}
+                                    buttonOnClick={async (o) => {
+                                        const text = document.getElementById("PASSWORD-SYSTEM-CURRENT-PASSWORD")
+                                        if(text.getAttribute('type') == "password") {
+                                            text.setAttribute('type', 'text')
+                                            this.setState({ "hidePassword": false })
+                                        } else {
+                                            text.setAttribute('type', 'password')
+                                            this.setState({ "hidePassword": true })
+                                        }
+                                        this.render()
+                                    }}
+                                    onChange={async (o) => {
                                         await this.setState({ password: o.toString() });
                                         this.hasUserInputed();
                                     }}
-                                    rows={1}
-                                >{Messages.PASSWORD_SYSTEM.CURRENT_PASSWORD}</TextAreaInput>
+                                >{Messages.PASSWORD_SYSTEM.CURRENT_PASSWORD}</TextInputWithButton>
                             </td>
                             <td>
-                                <TextAreaInput
+                                <TextInputWithButton
+                                    textBoxId={"PASSWORD-SYSTEM-NEW-PASSWORD"}
+                                    buttonIcon={`${this.state.hideNewPassword ? `far fa-eye` : `far fa-eye-slash`}`}
+                                    buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hideNewPassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}
+                                    buttonOnClick={async (o) => {
+                                        const text = document.getElementById("PASSWORD-SYSTEM-NEW-PASSWORD")
+                                        if(text.getAttribute('type') == "password") {
+                                            text.setAttribute('type', 'text')
+                                            this.setState({ "hideNewPassword": false })
+                                        } else {
+                                            text.setAttribute('type', 'password')
+                                            this.setState({ "hideNewPassword": true })
+                                        }
+                                        this.render()
+                                    }}
                                     onChange={async (o) => {
                                         await this.setState({ newPassword: o.toString() })
                                         this.hasUserInputed();
                                     }}
-                                    rows={1}
-                                >{Messages.PASSWORD_SYSTEM.NEW_PASSWORD}</TextAreaInput>
+                                >{Messages.PASSWORD_SYSTEM.NEW_PASSWORD}</TextInputWithButton>
                             </td>
                             <td>
                                 <Button
@@ -83,13 +112,26 @@ module.exports = class addPasswordMenu extends React.Component {
                         </tr>
                         <tr>
                             <td colSpan="2">
-                                <TextAreaInput
+                                <TextInputWithButton
+                                    textBoxId={"PASSWORD-SYSTEM-REMOVE-PASSWORD"}
+                                    buttonIcon={`${this.state.hideResetPassword ? `far fa-eye` : `far fa-eye-slash`}`}
+                                    buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hideResetPassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}
+                                    buttonOnClick={async (o) => {
+                                        const text = document.getElementById("PASSWORD-SYSTEM-NEW-PASSWORD")
+                                        if(text.getAttribute('type') == "password") {
+                                            text.setAttribute('type', 'text')
+                                            this.setState({ "hideResetPassword": false })
+                                        } else {
+                                            text.setAttribute('type', 'password')
+                                            this.setState({ "hideResetPassword": true })
+                                        }
+                                        this.render()
+                                    }}
                                     onChange={async (o) => {
                                         await this.setState({ resetPassword: o.toString() })
                                         this.hasUserInputedReset()
                                     }}
-                                    rows={1}
-                                >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextAreaInput>
+                                >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextInputWithButton>
                             </td>
                             <td>
                                 <div>

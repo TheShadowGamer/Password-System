@@ -132,13 +132,6 @@ module.exports = class addPasswordMenu extends React.Component {
                                         this.hasUserInputedReset()
                                     }}
                                 >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextInputWithButton>
-                                <TextAreaInput
-                                    onChange={async (o) => {
-                                        await this.setState({ resetPassword: o.toString() })
-                                        this.hasUserInputedReset()
-                                    }}
-                                    rows={1}
-                                >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextAreaInput>
                             </td>
                             <td>
                                 <Button

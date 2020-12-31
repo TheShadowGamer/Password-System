@@ -35,7 +35,6 @@ module.exports = class addPasswordMenu extends React.Component {
                         buttonText={Messages.PASSWORD_SYSTEM[`${this.state.fieldType ? 'SHOW' : 'HIDE'}_PASSWORD`]}
                         buttonOnClick={async (o) => {
                             const text = document.getElementById("PASSWORD-SYSTEM-ADD-PASSWORD-FOLDER")
-                            console.log(this.state.fieldType)
                             if(text.getAttribute('type') == "password") {
                                 text.setAttribute('type', 'text')
                                 this.setState({ "fieldType": false })

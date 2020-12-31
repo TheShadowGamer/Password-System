@@ -11,6 +11,7 @@ module.exports = class unlockDiscord extends React.Component {
 
         this.state = {
             password: "",
+            hidePassword: false,
             userHasInputed: false,
             incorrect: false
         };
@@ -30,13 +31,26 @@ module.exports = class unlockDiscord extends React.Component {
                     <FormTitle tag="h4">{Messages.PASSWORD_SYSTEM.UNLOCK_DISCORD}</FormTitle>
                 </Modal.ModalHeader>
                 <Modal.ModalContent>
-                    <TextAreaInput
+                    <TextInputWithButton
+                        textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
+                        buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
+                        buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hidePassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}
+                        buttonOnClick={async (o) => {
+                            const text = document.getElementById("PASSWORD-SYSTEM-CURRENT-PASSWORD")
+                            if(text.getAttribute('type') == "password") {
+                                text.setAttribute('type', 'text')
+                                this.setState({ "hidePassword": false })
+                            } else {
+                                text.setAttribute('type', 'password')
+                                this.setState({ "hidePassword": true })
+                            }
+                            this.render()
+                        }}
                         onChange={async (o) => {
                             await this.setState({ password: o.toString() });
                             this.hasUserInputed();
                         }}
-                        rows={1}
-                    >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextAreaInput>
+                    >{Messages.PASSWORD_SYSTEM.CURRENT_PASSWORD}</TextInputWithButton>
                     <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.PASSWORD_SYSTEM.INCORRECT_PASSWORD}</h5>
                 </Modal.ModalContent>
                 <Modal.ModalFooter>

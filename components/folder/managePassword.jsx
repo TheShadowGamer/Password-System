@@ -117,7 +117,7 @@ module.exports = class addPasswordMenu extends React.Component {
                                     buttonIcon={`${this.state.hideResetPassword ? `far fa-eye` : `far fa-eye-slash`}`}
                                     buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hideResetPassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}
                                     buttonOnClick={async (o) => {
-                                        const text = document.getElementById("PASSWORD-SYSTEM-NEW-PASSWORD")
+                                        const text = document.getElementById("PASSWORD-SYSTEM-REMOVE-PASSWORD")
                                         if(text.getAttribute('type') == "password") {
                                             text.setAttribute('type', 'text')
                                             this.setState({ "hideResetPassword": false })

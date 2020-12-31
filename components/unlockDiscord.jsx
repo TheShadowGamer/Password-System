@@ -49,7 +49,7 @@ module.exports = class unlockDiscord extends React.Component {
                                 popouts.parentNode.insertBefore(this.props.app, popouts)
                                 modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
                                 const lastChangelog = this.props.settings.get('last_changelog', '');
-                                const changelog = require('../changelogs.json');
+                                const changelog = require('./changelog/changelogs.json');
                                 if (changelog.id !== lastChangelog) {
                                     const changeLogExports = require("./changelog/changelogExports")
                                     changeLogExports.openChangeLogs(this.props.settings)

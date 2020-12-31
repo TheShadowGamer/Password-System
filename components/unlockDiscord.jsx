@@ -1,6 +1,6 @@
 const { React, getModule, i18n: { Messages } } = require("powercord/webpack");
 const { FormTitle, Button } = require("powercord/components");
-const { TextAreaInput } = require("powercord/components/settings");
+const TextInputWithButton = require("./TextInputWithButton")
 const electron = require("electron")
 const Modal = getModule(['ModalRoot'], false)
 const modalStack = getModule(['openModal'], false)
@@ -63,7 +63,7 @@ module.exports = class unlockDiscord extends React.Component {
                                 popouts.parentNode.insertBefore(this.props.app, popouts)
                                 modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
                                 const lastChangelog = this.props.settings.get('last_changelog', '');
-                                const changelog = require('../changelogs.json');
+                                const changelog = require('./changelog/changelogs.json');
                                 if (changelog.id !== lastChangelog) {
                                     const changeLogExports = require("./changelog/changelogExports")
                                     changeLogExports.openChangeLogs(this.props.settings)

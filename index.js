@@ -4,6 +4,7 @@ const { getModule, React, FluxDispatcher, i18n: { Messages } } = require('powerc
 const { inject, uninject } = require('powercord/injector')
 const { selectChannel } = getModule(['selectChannel'], false)
 const { open } = require("powercord/modal");
+const i18n = require('./i18n');
 
 //JSX Files
 const addFolderPasswordMenu = require("./components/folder/addPasswordMenu")
@@ -19,6 +20,7 @@ const changelog = require("./components/changelog/changelogs.json")
 let _this
 module.exports = class PasswordFolder extends Plugin {
     async startPlugin() {
+        powercord.api.i18n.loadAllStrings(i18n);
         const enabled = await this.settings.get("lockDiscord")
         if(enabled === false || !enabled) {
             const lastChangelog = this.settings.get('last_changelog', '');

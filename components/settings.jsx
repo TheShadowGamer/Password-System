@@ -36,7 +36,7 @@ module.exports = class Settings extends React.Component {
                     onChange={() => {
                         this.props.toggleSetting('lockDiscord', false)
                     }}
-                >{Messages.DISCORD_PASSWORD}</SwitchItem>
+                >{Messages.PASSWORD_SYSTEM.DISCORD_PASSWORD}</SwitchItem>
                 {this.props.getSetting("lockDiscord", false) && (
                     <div>
                         <TextAreaInput
@@ -46,20 +46,20 @@ module.exports = class Settings extends React.Component {
                                 this.hasUserInputed();
                             }}
                             rows={1}
-                        >{Messages.PASSWORD}</TextAreaInput>
+                        >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextAreaInput>
                         <Button
                             disabled={!this.state.userHasInputed}
                             onClick={() => {
                                 this.props.updateSetting("password_Discord", btoa(this.state.password))
                             }}
-                        >{Messages.SET_PASSWORD}</Button>
+                        >{Messages.PASSWORD_SYSTEM.SET_PASSWORD}</Button>
                         <br></br>
                         <SwitchItem
                             value={this.props.getSetting("openLink", false)}
                             onChange={() => {
                                 this.props.toggleSetting('openLink')
                             }}
-                        >{Messages.PS_OPEN_LINK}</SwitchItem>
+                        >{Messages.PASSWORD_SYSTEM.PS_OPEN_LINK}</SwitchItem>
                         {this.props.getSetting("openLink", false) && (
                             <div>
                                 <TextAreaInput
@@ -69,13 +69,13 @@ module.exports = class Settings extends React.Component {
                                         this.hasUserInputedLink();
                                     }}
                                     rows={1}
-                                >{Messages.LINK_TO_OPEN}</TextAreaInput>
+                                >{Messages.PASSWORD_SYSTEM.LINK_TO_OPEN}</TextAreaInput>
                                 <Button
                                     disabled={!this.state.userHasInputedLink}
                                     onClick={() => {
                                         this.props.updateSetting("LinkToOpen", this.state.link)
                                     }}
-                                >{Messages.SET_LINK}</Button>
+                                >{Messages.PASSWORD_SYSTEM.SET_LINK}</Button>
                             </div>
                         )}
                     </div>

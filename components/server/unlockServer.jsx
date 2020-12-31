@@ -26,7 +26,7 @@ module.exports = class unlockServer extends React.Component {
         return (
             <Modal className="powercord-text">
                 <Modal.Header>
-                    <FormTitle tag="h4">{Messages.UNLOCK_SERVER}</FormTitle>
+                    <FormTitle tag="h4">{Messages.PASSWORD_SYSTEM.UNLOCK_SERVER}</FormTitle>
                 </Modal.Header>
                 <Modal.Content>
                     <TextAreaInput
@@ -35,8 +35,8 @@ module.exports = class unlockServer extends React.Component {
                             this.hasUserInputed();
                         }}
                         rows={1}
-                    >{Messages.PASSWORD}</TextAreaInput>
-                    <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.INCORRECT_PASSWORD}</h5>
+                    >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextAreaInput>
+                    <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.PASSWORD_SYSTEM.INCORRECT_PASSWORD}</h5>
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
@@ -51,13 +51,13 @@ module.exports = class unlockServer extends React.Component {
                             this.render()
                             this.props.settings.set("unlocked_" + this.props.args[0].guild.id.toString(), false)
                         }}
-                    >{Messages.UNLOCK}</Button>
+                    >{Messages.PASSWORD_SYSTEM.UNLOCK}</Button>
                     <Button
                         onClick={closeModal}
                         look={Button.Looks.LINK}
                         color={Button.Colors.TRANSPARENT}
                     >
-                        {Messages.CANCEL}
+                        {Messages.PASSWORD_SYSTEM.CANCEL}
                     </Button>
                 </Modal.Footer>
             </Modal>

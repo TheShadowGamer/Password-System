@@ -1,6 +1,6 @@
-const { React } = require("powercord/webpack");
+const { React, i18n: { Messages } } = require("powercord/webpack");
 const { FormTitle, Button } = require("powercord/components");
-const { TextAreaInput } = require("powercord/components/settings");
+const TextInputWithButton = require("../TextInputWithButton")
 const { Modal } = require("powercord/components/modal");
 const { close: closeModal } = require("powercord/modal");
 
@@ -11,6 +11,7 @@ module.exports = class addPasswordMenu extends React.Component {
     this.state = {
         password: "",
         userHasInputed: false,
+        fieldType: false
     };
     this.hasUserInputed = () => {
         if (!this.state.password) {
@@ -25,32 +26,52 @@ module.exports = class addPasswordMenu extends React.Component {
         return (
             <Modal className="powercord-text">
                 <Modal.Header>
-                    <FormTitle tag="h4">Add Password to Folder</FormTitle>
+                    <FormTitle tag="h4">{Messages.PASSWORD_SYSTEM.ADD_PASSWORD_FOLDER}</FormTitle>
                 </Modal.Header>
                 <Modal.Content>
-                    <TextAreaInput
+                    <TextInputWithButton
+                        onKeyPress={async (e) => {
+                            if(e.charCode == 13) {
+                                this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
+                                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
+                                closeModal();
+                            }
+                        }}
+                        textBoxId={"PASSWORD-SYSTEM-ADD-PASSWORD-FOLDER"}
+                        buttonIcon={`${this.state.fieldType ? `far fa-eye` : `far fa-eye-slash`}`}
+                        buttonText={Messages.PASSWORD_SYSTEM[`${this.state.fieldType ? 'SHOW' : 'HIDE'}_PASSWORD`]}
+                        buttonOnClick={async (o) => {
+                            const text = document.getElementById("PASSWORD-SYSTEM-ADD-PASSWORD-FOLDER")
+                            if(text.getAttribute('type') == "password") {
+                                text.setAttribute('type', 'text')
+                                this.setState({ "fieldType": false })
+                            } else {
+                                text.setAttribute('type', 'password')
+                                this.setState({ "fieldType": true })
+                            }
+                            this.render()
+                        }}
                         onChange={async (o) => {
                             await this.setState({ password: o.toString() });
                             this.hasUserInputed();
                         }}
-                        rows={1}
-                    >Password</TextAreaInput>
+                    >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextInputWithButton>
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
                         disabled={!this.state.userHasInputed}
                         onClick={() => {
-                            this.props.settings.set(this.props.args[0].folderId, btoa(this.state.password))
-                            this.props.settings.set("unlocked_" + this.props.args[0].folderId, false)
+                            this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
+                            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
                             closeModal();
                         }}
-                    >Set Password</Button>
+                    >{Messages.PASSWORD_SYSTEM.SET_PASSWORD}</Button>
                     <Button
                         onClick={closeModal}
                         look={Button.Looks.LINK}
                         color={Button.Colors.TRANSPARENT}
                     >
-                        Cancel
+                        {Messages.PASSWORD_SYSTEM.CANCEL}
                     </Button>
                 </Modal.Footer>
             </Modal>

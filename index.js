@@ -1,9 +1,10 @@
 //Require Things
 const { Plugin } = require('powercord/entities')
-const { getModule, React, FluxDispatcher } = require('powercord/webpack')
+const { getModule, React, FluxDispatcher, i18n: { Messages } } = require('powercord/webpack')
 const { inject, uninject } = require('powercord/injector')
 const { selectChannel } = getModule(['selectChannel'], false)
 const { open } = require("powercord/modal");
+const i18n = require('./i18n');
 
 //JSX Files
 const addFolderPasswordMenu = require("./components/folder/addPasswordMenu")
@@ -19,6 +20,7 @@ const changelog = require("./components/changelog/changelogs.json")
 let _this
 module.exports = class PasswordFolder extends Plugin {
     async startPlugin() {
+        powercord.api.i18n.loadAllStrings(i18n);
         const enabled = await this.settings.get("lockDiscord")
         if(enabled === false || !enabled) {
             const lastChangelog = this.settings.get('last_changelog', '');
@@ -58,73 +60,72 @@ module.exports = class PasswordFolder extends Plugin {
         //END KEYBIND TO LOCK DISCORD
         //INJECTION
         inject('folder-password', GuildFolderContextMenu, 'default', (args, res) => {
-            if(!this.settings.get(args[0].folderId.toString())) {
+            if(!this.settings.get("folder_" + args[0].folderId.toString())) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'set-password-folder',
-                    label: 'Set Password',
+                    label: Messages.PASSWORD_SYSTEM.SET_PASSWORD,
                     action: () => {
                         open(() => React.createElement(addFolderPasswordMenu, { settings: this.settings, args: args }))
                     } 
                 }))
                 return res
             }
-            if(this.settings.get("unlocked_" + args[0].folderId.toString()) == false) {
+            if(this.settings.get("unlocked_folder_" + args[0].folderId.toString()) == false) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'unlock-folder',
-                    label: 'Unlock Folder',
+                    label: Messages.PASSWORD_SYSTEM.UNLOCK_FOLDER,
                     action: () => {
                         open(() => React.createElement(unlockFolder, { settings: this.settings, args: args }))
                     } 
                 }))
             }
-            if(this.settings.get("unlocked_" + args[0].folderId.toString()) == true) {
+            if(this.settings.get("unlocked_folder_" + args[0].folderId.toString()) == true) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'lock-folder',
-                    label: 'Lock Folder',
-                    action: () => this.settings.set("unlocked_" + args[0].folderId.toString(), false)
+                    label: Messages.PASSWORD_SYSTEM.LOCK_FOLDER,
+                    action: () => this.settings.set("unlocked_folder_" + args[0].folderId.toString(), false)
                 }))
                 
             }
             res.props.children.unshift(React.createElement(menu.MenuItem, {
                 id: 'manage-password',
-                label: 'Manage Password',
+                label: Messages.PASSWORD_SYSTEM.MANAGE_PASSWORD,
                 action: () => open(() => React.createElement(manageFolderPassword, { settings: this.settings, args: args }))
             }))
             return res
         })
         //SERVER INJECTION
         inject('server-password', GuildContextMenu, 'default', (args, res) => {
-            console.log(args[0].guild.id.toString())
-            if(!this.settings.get(args[0].guild.id.toString())) {
+            if(!this.settings.get("server_" + args[0].guild.id.toString())) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'set-password-server',
-                    label: 'Set Password',
+                    label: Messages.PASSWORD_SYSTEM.SET_PASSWORD,
                     action: () => {
                         open(() => React.createElement(addServerPasswordMenu, { settings: this.settings, args: args }))
                     } 
                 }))
                 return res
             }
-            if(this.settings.get("unlocked_" + args[0].guild.id.toString()) == false) {
+            if(this.settings.get("unlocked_server_" + args[0].guild.id.toString()) == false) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'unlock-server',
-                    label: 'Unlock Server',
+                    label: Messages.PASSWORD_SYSTEM.UNLOCK_SERVER,
                     action: () => {
                         open(() => React.createElement(unlockServer, { settings: this.settings, args: args }))
                     } 
                 }))
             }
-            if(this.settings.get("unlocked_" + args[0].guild.id.toString()) == true) {
+            if(this.settings.get("unlocked_server_" + args[0].guild.id.toString()) == true) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'lock-server',
-                    label: 'Lock Server',
-                    action: () => this.settings.set("unlocked_" + args[0].guild.id.toString(), false)
+                    label: Messages.PASSWORD_SYSTEM.LOCK_SERVER,
+                    action: () => this.settings.set("unlocked_server_" + args[0].guild.id.toString(), false)
                 }))
                 
             }
             res.props.children.unshift(React.createElement(menu.MenuItem, {
                 id: 'manage-password',
-                label: 'Manage Password',
+                label: Messages.PASSWORD_SYSTEM.MANAGE_PASSWORD,
                 action: () => open(() => React.createElement(manageServerPassword, { settings: this.settings, args: args }))
             }))
             return res
@@ -146,6 +147,36 @@ module.exports = class PasswordFolder extends Plugin {
         else ConnectionStore.addChangeListener(listener)
         //end on discord startup
         GuildFolderContextMenu.default.displayName = 'GuildFolderContextMenu'
+        const allPasswords = this.settings.getKeys()
+        allPasswords.forEach(async (e) => {
+            if(["last_changelog", "lockDiscord", "password_Discord", "openLink", "LinkToOpen"].includes(e)) return
+            if(e.startsWith("unlocked_server")) return
+            if(e.startsWith("unlocked_folder")) return
+            if(e.startsWith("server_")) return
+            if(e.startsWith("folder_")) return
+            if(e.startsWith("unlocked_")) {
+                const a = e.split("unlocked_")
+                if(a[1].length == 10) {
+                    let value = await this.settings.get(e)
+                    await this.settings.set("unlocked_folder_" + a[1], value)
+                    this.settings.delete(e)
+                } else {
+                    let value = await this.settings.get(e)
+                    await this.settings.set("unlocked_server_" + a[1], value)
+                    this.settings.delete(e)
+                }
+                return
+            }
+            if(e.length == 10) {
+                let value = await this.settings.get(e)
+                await this.settings.set("folder_" + e, value)
+                this.settings.delete(e)
+            } else {
+                let value = await this.settings.get(e)
+                await this.settings.set("server_" + e, value)
+                this.settings.delete(e)
+            }
+        })
     }
 
     pluginWillUnload() {
@@ -161,25 +192,25 @@ module.exports = class PasswordFolder extends Plugin {
         const { toggleGuildFolderExpand } = await getModule(['move', 'toggleGuildFolderExpand'])
         const ExpandedFolderStore = await getModule(['getExpandedFolders'])
         const expandedFolders = ExpandedFolderStore.getExpandedFolders()
-        const setting = await this.settings.get(folder.folderId.toString())
+        const setting = await this.settings.get("folder_" + folder.folderId.toString())
         if(setting) {
-            const unlocked = await this.settings.get("unlocked_" + folder.folderId.toString())
+            const unlocked = await this.settings.get("unlocked_folder_" + folder.folderId.toString())
             if(unlocked === false) {
                 if(expandedFolders.has(folder.folderId)) {
                     toggleGuildFolderExpand(folder.folderId)
                     powercord.api.notices.sendToast('FolderLocked', {
-                        header: 'Folder Locked!', // required
-                        content: 'This folder is locked! Please unlock the folder first!',
+                        header: Messages.PASSWORD_SYSTEM.FOLDER_LOCKED, // required
+                        content: Messages.PASSWORD_SYSTEM.FOLDER_LOCKED_DESCRIPTION,
                         type: 'info',
                         timeout: 10e3,
                         buttons: [
                             {
-                                text: 'Okay',
+                                text: Messages.PASSWORD_SYSTEM.OKAY,
                                 size: 'medium',
                                 look: 'outlined'
                             },
                             {
-                                text: 'Unlock',
+                                text: Messages.PASSWORD_SYSTEM.UNLOCK,
                                 size: 'medium',
                                 look: 'outlined',
                                 onClick: () => open(() => React.createElement(unlockFolder, { settings: this.settings, args: [{folderId: folder.folderId}] }))
@@ -194,24 +225,24 @@ module.exports = class PasswordFolder extends Plugin {
         if(!this.lastChannel) this.lastChannel = channel
         if(!this.lastChannel.guildId)
         if (this.lastChannel.guildId !== channel.guildId) {
-            const setting = await this.settings.get(channel.guildId.toString())
+            const setting = await this.settings.get("server_" + channel.guildId.toString())
             if(!setting) return
-            const unlocked = await this.settings.get("unlocked_" + channel.guildId.toString())
+            const unlocked = await this.settings.get("unlocked_server_" + channel.guildId.toString())
             if(unlocked === false) {
                 selectChannel(this.lastChannel.guildId, this.lastChannel.channelId)
                 powercord.api.notices.sendToast('ServerLocked', {
-                    header: 'Server Locked!', // required
-                    content: 'This server is locked! Please unlock the server first!',
+                    header: Messages.PASSWORD_SYSTEM.SERVER_LOCKED, // required
+                    content: Messages.PASSWORD_SYSTEM.SERVER_LOCKED_DESCRIPTION,
                     type: 'info',
                     timeout: 10e3,
                     buttons: [
                         {
-                            text: 'Okay',
+                            text: Messages.PASSWORD_SYSTEM.OKAY,
                             size: 'medium',
                             look: 'outlined'
                         },
                         {
-                            text: 'Unlock',
+                            text: Messages.PASSWORD_SYSTEM.UNLOCK,
                             size: 'medium',
                             look: 'outlined',
                             onClick: () => open(() => React.createElement(unlockServer, { settings: this.settings, args: [{guild: {id: channel.guildId}}] }))

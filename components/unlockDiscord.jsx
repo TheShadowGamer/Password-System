@@ -32,6 +32,30 @@ module.exports = class unlockDiscord extends React.Component {
                 </Modal.ModalHeader>
                 <Modal.ModalContent>
                     <TextInputWithButton
+                        onKeyPress={async (e) => {
+                            if(e.charCode == 13) {
+                                const password = this.props.settings.get("password_Discord")
+                                if(btoa(this.state.password) === password) {
+                                    const popouts = document.querySelector(`.${getModule(['popouts', 'popout'], false).popouts}`)
+                                    popouts.parentNode.insertBefore(this.props.app, popouts)
+                                    modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
+                                    const lastChangelog = this.props.settings.get('last_changelog', '');
+                                    const changelog = require('./changelog/changelogs.json');
+                                    if (changelog.id !== lastChangelog) {
+                                        const changeLogExports = require("./changelog/changelogExports")
+                                        changeLogExports.openChangeLogs(this.props.settings)
+                                    }
+                                    return
+                                }
+                                this.setState({ incorrect: true })
+                                if(this.props.settings.get("openLink") === true) {
+                                    if(this.props.settings.get("LinkToOpen")) {
+                                        electron.shell.openExternal(this.props.settings.get("LinkToOpen", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
+                                    }
+                                }
+                                this.render()
+                            }
+                        }}
                         textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
                         buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
                         buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hidePassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}

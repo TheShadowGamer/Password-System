@@ -31,7 +31,7 @@ module.exports = class TextInputWithButton extends React.PureComponent {
 
   render () {
     const { classes } = this;
-    const { title, disabled, placeholder, buttonOnClick, buttonIcon } = this.props;
+    const { title, disabled, placeholder, buttonOnClick, buttonIcon, onKeyPress } = this.props;
 
     return (
       <FormItem title={title}>
@@ -39,7 +39,7 @@ module.exports = class TextInputWithButton extends React.PureComponent {
         <div className={[ 'passwordSystem-Text-Input', classes.container, classes.hasValue, disabled && classes.disabled ].join(' ')}>
           <Flex className={classes.layout}>
             <Flex.Child className={classes.input.split(' ').splice(1).join(' ')} style={{ cursor: 'auto' }}>
-              <input type='text' value={this.props.defaultValue} placeholder={placeholder} disabled={disabled} onChange={this.handleChange.bind(this)} id={this.props.textBoxId}></input>
+              <input type='text' value={this.props.defaultValue} onKeyPress={onKeyPress} placeholder={placeholder} disabled={disabled} onChange={this.handleChange.bind(this)} id={this.props.textBoxId}></input>
             </Flex.Child>
             <Flex shrink={1} grow={0} style={{ margin: 0 }}>
               <Button className={classes.button} disabled={disabled} size={Button.Sizes.MIN} color={Button.Colors.GREY} look={Button.Looks.GHOST} onClick={buttonOnClick}>

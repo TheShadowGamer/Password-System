@@ -30,6 +30,13 @@ module.exports = class addPasswordMenu extends React.Component {
                 </Modal.Header>
                 <Modal.Content>
                     <TextInputWithButton
+                        onKeyPress={async (e) => {
+                            if(e.charCode == 13) {
+                                this.props.settings.set("server_" + this.props.args[0].guild.id.toString(), btoa(this.state.password))
+                                this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
+                                closeModal();
+                            }
+                        }}
                         textBoxId={"PASSWORD-SYSTEM-ADD-PASSWORD-FOLDER"}
                         buttonIcon={`${this.state.fieldType ? `far fa-eye` : `far fa-eye-slash`}`}
                         buttonText={Messages.PASSWORD_SYSTEM[`${this.state.fieldType ? 'SHOW' : 'HIDE'}_PASSWORD`]}

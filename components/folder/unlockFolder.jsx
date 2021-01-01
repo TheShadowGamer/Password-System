@@ -31,6 +31,18 @@ module.exports = class unlockFolder extends React.Component {
                 </Modal.Header>
                 <Modal.Content>
                     <TextInputWithButton
+                        onKeyPress={async (e) => {
+                            if(e.charCode == 13) {
+                                const password = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
+                                if(btoa(this.state.password) === password) {
+                                    this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), true)
+                                    return closeModal()
+                                }
+                                this.setState({ incorrect: true })
+                                this.render()
+                                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), false)
+                            }
+                        }}
                         textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
                         buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
                         buttonText={Messages.PASSWORD_SYSTEM[`${this.state.hidePassword ? 'SHOW' : 'HIDE'}_PASSWORD`]}

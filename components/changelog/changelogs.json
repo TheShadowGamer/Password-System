@@ -1,6 +1,6 @@
 {
-  "id": "update-2020-12-28",
-  "date": "2020-12-28",
+  "id": "update-2021-1-1",
+  "date": "2021-1-1",
   "contents": [
     {
       "type": "HEADER",
@@ -13,7 +13,7 @@
       "list": [
         "Added i18n (Internationalization) support! Open a PR on the Github to contribute!",
         "Added a show/hide button for passwords!",
-        "Hitting enter should enter your password now instead of making a new line! (\"except for the manage password screens\")"
+        "Hitting enter should enter your password now instead of making a new line! (except for the manage password screens)"
       ]
     }
   ],

@@ -56,14 +56,14 @@ module.exports = class unlockFolder extends React.Component {
                     <Button
                         disabled={!this.state.userHasInputed}
                         onClick={() => {
-                            const password = this.props.settings.get(this.props.args[0].folderId.toString())
+                            const password = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
                             if(btoa(this.state.password) === password) {
-                                this.props.settings.set("unlocked_" + this.props.args[0].folderId.toString(), true)
+                                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), true)
                                 return closeModal()
                             }
                             this.setState({ incorrect: true })
                             this.render()
-                            this.props.settings.set("unlocked_" + this.props.args[0].folderId.toString(), false)
+                            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), false)
                         }}
                     >{Messages.PASSWORD_SYSTEM.UNLOCK}</Button>
                     <Button

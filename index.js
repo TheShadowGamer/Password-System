@@ -60,7 +60,7 @@ module.exports = class PasswordFolder extends Plugin {
         //END KEYBIND TO LOCK DISCORD
         //INJECTION
         inject('folder-password', GuildFolderContextMenu, 'default', (args, res) => {
-            if(!this.settings.get(args[0].folderId.toString())) {
+            if(!this.settings.get("folder_" + args[0].folderId.toString())) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'set-password-folder',
                     label: Messages.PASSWORD_SYSTEM.SET_PASSWORD,
@@ -70,7 +70,7 @@ module.exports = class PasswordFolder extends Plugin {
                 }))
                 return res
             }
-            if(this.settings.get("unlocked_" + args[0].folderId.toString()) == false) {
+            if(this.settings.get("unlocked_folder_" + args[0].folderId.toString()) == false) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'unlock-folder',
                     label: Messages.PASSWORD_SYSTEM.UNLOCK_FOLDER,
@@ -79,11 +79,11 @@ module.exports = class PasswordFolder extends Plugin {
                     } 
                 }))
             }
-            if(this.settings.get("unlocked_" + args[0].folderId.toString()) == true) {
+            if(this.settings.get("unlocked_folder_" + args[0].folderId.toString()) == true) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'lock-folder',
                     label: Messages.PASSWORD_SYSTEM.LOCK_FOLDER,
-                    action: () => this.settings.set("unlocked_" + args[0].folderId.toString(), false)
+                    action: () => this.settings.set("unlocked_folder_" + args[0].folderId.toString(), false)
                 }))
                 
             }
@@ -96,8 +96,7 @@ module.exports = class PasswordFolder extends Plugin {
         })
         //SERVER INJECTION
         inject('server-password', GuildContextMenu, 'default', (args, res) => {
-            console.log(args[0].guild.id.toString())
-            if(!this.settings.get(args[0].guild.id.toString())) {
+            if(!this.settings.get("server_" + args[0].guild.id.toString())) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'set-password-server',
                     label: Messages.PASSWORD_SYSTEM.SET_PASSWORD,
@@ -107,7 +106,7 @@ module.exports = class PasswordFolder extends Plugin {
                 }))
                 return res
             }
-            if(this.settings.get("unlocked_" + args[0].guild.id.toString()) == false) {
+            if(this.settings.get("unlocked_server_" + args[0].guild.id.toString()) == false) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'unlock-server',
                     label: Messages.PASSWORD_SYSTEM.UNLOCK_SERVER,
@@ -116,11 +115,11 @@ module.exports = class PasswordFolder extends Plugin {
                     } 
                 }))
             }
-            if(this.settings.get("unlocked_" + args[0].guild.id.toString()) == true) {
+            if(this.settings.get("unlocked_server_" + args[0].guild.id.toString()) == true) {
                 res.props.children.unshift(React.createElement(menu.MenuItem, {
                     id: 'lock-server',
                     label: Messages.PASSWORD_SYSTEM.LOCK_SERVER,
-                    action: () => this.settings.set("unlocked_" + args[0].guild.id.toString(), false)
+                    action: () => this.settings.set("unlocked_server_" + args[0].guild.id.toString(), false)
                 }))
                 
             }
@@ -148,6 +147,36 @@ module.exports = class PasswordFolder extends Plugin {
         else ConnectionStore.addChangeListener(listener)
         //end on discord startup
         GuildFolderContextMenu.default.displayName = 'GuildFolderContextMenu'
+        const allPasswords = this.settings.getKeys()
+        allPasswords.forEach(async (e) => {
+            if(["last_changelog", "lockDiscord", "password_Discord", "openLink", "LinkToOpen"].includes(e)) return
+            if(e.startsWith("unlocked_server")) return
+            if(e.startsWith("unlocked_folder")) return
+            if(e.startsWith("server_")) return
+            if(e.startsWith("folder_")) return
+            if(e.startsWith("unlocked_")) {
+                const a = e.split("unlocked_")
+                if(a[1].length == 10) {
+                    let value = await this.settings.get(e)
+                    await this.settings.set("unlocked_folder_" + a[1], value)
+                    this.settings.delete(e)
+                } else {
+                    let value = await this.settings.get(e)
+                    await this.settings.set("unlocked_server_" + a[1], value)
+                    this.settings.delete(e)
+                }
+                return
+            }
+            if(e.length == 10) {
+                let value = await this.settings.get(e)
+                await this.settings.set("folder_" + e, value)
+                this.settings.delete(e)
+            } else {
+                let value = await this.settings.get(e)
+                await this.settings.set("server_" + e, value)
+                this.settings.delete(e)
+            }
+        })
     }
 
     pluginWillUnload() {
@@ -163,9 +192,9 @@ module.exports = class PasswordFolder extends Plugin {
         const { toggleGuildFolderExpand } = await getModule(['move', 'toggleGuildFolderExpand'])
         const ExpandedFolderStore = await getModule(['getExpandedFolders'])
         const expandedFolders = ExpandedFolderStore.getExpandedFolders()
-        const setting = await this.settings.get(folder.folderId.toString())
+        const setting = await this.settings.get("folder_" + folder.folderId.toString())
         if(setting) {
-            const unlocked = await this.settings.get("unlocked_" + folder.folderId.toString())
+            const unlocked = await this.settings.get("unlocked_folder_" + folder.folderId.toString())
             if(unlocked === false) {
                 if(expandedFolders.has(folder.folderId)) {
                     toggleGuildFolderExpand(folder.folderId)
@@ -196,9 +225,9 @@ module.exports = class PasswordFolder extends Plugin {
         if(!this.lastChannel) this.lastChannel = channel
         if(!this.lastChannel.guildId)
         if (this.lastChannel.guildId !== channel.guildId) {
-            const setting = await this.settings.get(channel.guildId.toString())
+            const setting = await this.settings.get("server_" + channel.guildId.toString())
             if(!setting) return
-            const unlocked = await this.settings.get("unlocked_" + channel.guildId.toString())
+            const unlocked = await this.settings.get("unlocked_server_" + channel.guildId.toString())
             if(unlocked === false) {
                 selectChannel(this.lastChannel.guildId, this.lastChannel.channelId)
                 powercord.api.notices.sendToast('ServerLocked', {

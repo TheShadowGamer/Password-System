@@ -56,14 +56,14 @@ module.exports = class unlockServer extends React.Component {
                     <Button
                         disabled={!this.state.userHasInputed}
                         onClick={() => {
-                            const password = this.props.settings.get(this.props.args[0].guild.id.toString())
+                            const password = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
                             if(btoa(this.state.password) === password) {
-                                this.props.settings.set("unlocked_" + this.props.args[0].guild.id.toString(), true)
+                                this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), true)
                                 return closeModal()
                             }
                             this.setState({ incorrect: true })
                             this.render()
-                            this.props.settings.set("unlocked_" + this.props.args[0].guild.id.toString(), false)
+                            this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
                         }}
                     >{Messages.PASSWORD_SYSTEM.UNLOCK}</Button>
                     <Button

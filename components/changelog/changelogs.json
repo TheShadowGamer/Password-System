@@ -11,7 +11,8 @@
     {
       "type": "CONTENTS",
       "list": [
-        "Added i18n (Internationalization) support! Open a PR on the Github to contribute!"
+        "Added i18n (Internationalization) support! Open a PR on the Github to contribute!",
+        "Added a show/hide button for passwords!"
       ]
     }
   ],

@@ -93,10 +93,10 @@ module.exports = class addPasswordMenu extends React.Component {
                                 <Button
                                     disabled={!this.state.userHasInputed}
                                     onClick={() => {
-                                        const actualPassword = this.props.settings.get(this.props.args[0].guild.id.toString())
+                                        const actualPassword = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
                                         if(btoa(this.state.password.toString()) === actualPassword) {
-                                            this.props.settings.set(this.props.args[0].guild.id.toString(), btoa(this.state.newPassword))
-                                            this.props.settings.set("unlocked_" + this.props.args[0].guild.id.toString(), false)
+                                            this.props.settings.set("server_" + this.props.args[0].guild.id.toString(), btoa(this.state.newPassword))
+                                            this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
                                             return closeModal();
                                         }
                                         this.setState({ changeIncorrect: true })
@@ -138,10 +138,10 @@ module.exports = class addPasswordMenu extends React.Component {
                                     <Button
                                         disabled={!this.state.userHasInputedReset}
                                         onClick={() => {
-                                            const actualPassword = this.props.settings.get(this.props.args[0].guild.id.toString())
+                                            const actualPassword = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
                                             if(btoa(this.state.resetPassword.toString()) === actualPassword) {
-                                                this.props.settings.delete(this.props.args[0].guild.id.toString())
-                                                this.props.settings.delete("unlocked_" + this.props.args[0].guild.id.toString())
+                                                this.props.settings.delete("server_" + this.props.args[0].guild.id.toString())
+                                                this.props.settings.delete("unlocked_server_" + this.props.args[0].guild.id.toString())
                                                 return closeModal()
                                             }
                                             this.setState({ resetIncorrect: true })

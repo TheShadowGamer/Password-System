@@ -54,8 +54,8 @@ module.exports = class addPasswordMenu extends React.Component {
                     <Button
                         disabled={!this.state.userHasInputed}
                         onClick={() => {
-                            this.props.settings.set(this.props.args[0].folderId, btoa(this.state.password))
-                            this.props.settings.set("unlocked_" + this.props.args[0].folderId, false)
+                            this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
+                            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
                             closeModal();
                         }}
                     >{Messages.PASSWORD_SYSTEM.SET_PASSWORD}</Button>

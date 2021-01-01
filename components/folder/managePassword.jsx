@@ -93,10 +93,9 @@ module.exports = class addPasswordMenu extends React.Component {
                                 <Button
                                     disabled={!this.state.userHasInputed}
                                     onClick={() => {
-                                        const actualPassword = this.props.settings.get(this.props.args[0].folderId.toString())
+                                        const actualPassword = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
                                         if(btoa(this.state.password.toString()) === actualPassword) {
-                                            this.props.settings.set(this.props.args[0].folderId.toString(), btoa(this.state.newPassword))
-                                            this.props.settings.set("unlocked_" + this.props.args[0].folderId, false)
+                                            this.props.settings.set("folder_" + this.props.args[0].folderId.toString(), btoa(this.state.newPassword))
                                             return closeModal();
                                         }
                                         this.setState({ changeIncorrect: true })
@@ -137,10 +136,10 @@ module.exports = class addPasswordMenu extends React.Component {
                                 <Button
                                     disabled={!this.state.userHasInputedReset}
                                     onClick={() => {
-                                        const actualPassword = this.props.settings.get(this.props.args[0].folderId.toString())
+                                        const actualPassword = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
                                         if(btoa(this.state.resetPassword.toString()) === actualPassword) {
-                                            this.props.settings.delete(this.props.args[0].folderId)
-                                            this.props.settings.delete("unlocked_" + this.props.args[0].folderId)
+                                            this.props.settings.delete("folder_" + this.props.args[0].folderId)
+                                            this.props.settings.delete("unlocked_folder_" + this.props.args[0].folderId)
                                             return closeModal()
                                         }
                                         this.setState({ resetIncorrect: true })

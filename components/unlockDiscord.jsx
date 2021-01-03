@@ -12,15 +12,7 @@ module.exports = class unlockDiscord extends React.Component {
         this.state = {
             password: "",
             hidePassword: false,
-            userHasInputed: false,
             incorrect: false
-        };
-        this.hasUserInputed = () => {
-            if (!this.state.password) {
-                this.setState({ userHasInputed: false });
-            } else {
-                this.setState({ userHasInputed: true });
-            }
         };
     }
 
@@ -72,14 +64,13 @@ module.exports = class unlockDiscord extends React.Component {
                         }}
                         onChange={async (o) => {
                             await this.setState({ password: o.toString() });
-                            this.hasUserInputed();
                         }}
                     >{Messages.PASSWORD_SYSTEM.CURRENT_PASSWORD}</TextInputWithButton>
                     <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.PASSWORD_SYSTEM.INCORRECT_PASSWORD}</h5>
                 </Modal.ModalContent>
                 <Modal.ModalFooter>
                     <Button
-                        disabled={!this.state.userHasInputed}
+                        disabled={this.state.password.length === 0}
                         onClick={() => {
                             const password = this.props.settings.get("password_Discord")
                             if(btoa(this.state.password) === password) {

@@ -11,16 +11,18 @@ module.exports = class unlockFolder extends React.Component {
         this.state = {
             password: "",
             hidePassword: false,
-            userHasInputed: false,
             incorrect: false
         };
-        this.hasUserInputed = () => {
-            if (!this.state.password) {
-                this.setState({ userHasInputed: false });
-            } else {
-                this.setState({ userHasInputed: true });
+        this.submit = () => {
+            const password = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
+            if(btoa(this.state.password) === password) {
+                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), true)
+                return closeModal()
             }
-        };
+            this.setState({ incorrect: true })
+            this.render()
+            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), false)
+        }
     }
 
     render() {
@@ -32,16 +34,7 @@ module.exports = class unlockFolder extends React.Component {
                 <Modal.Content>
                     <TextInputWithButton
                         onKeyPress={async (e) => {
-                            if(e.charCode == 13) {
-                                const password = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
-                                if(btoa(this.state.password) === password) {
-                                    this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), true)
-                                    return closeModal()
-                                }
-                                this.setState({ incorrect: true })
-                                this.render()
-                                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), false)
-                            }
+                            if(e.charCode == 13) this.submit()
                         }}
                         textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
                         buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
@@ -59,24 +52,14 @@ module.exports = class unlockFolder extends React.Component {
                         }}
                         onChange={async (o) => {
                             await this.setState({ password: o.toString() });
-                            this.hasUserInputed();
                         }}
                     >{Messages.PASSWORD_SYSTEM.CURRENT_PASSWORD}</TextInputWithButton>
                     <h5 className="colorStandard-2KCXvj size14-e6ZScH h5-18_1nd title-3sZWYQ defaultMarginh5-2mL-bP" hidden={!this.state.incorrect} >{Messages.PASSWORD_SYSTEM.INCORRECT_PASSWORD}</h5>
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
-                        disabled={!this.state.userHasInputed}
-                        onClick={() => {
-                            const password = this.props.settings.get("folder_" + this.props.args[0].folderId.toString())
-                            if(btoa(this.state.password) === password) {
-                                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), true)
-                                return closeModal()
-                            }
-                            this.setState({ incorrect: true })
-                            this.render()
-                            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId.toString(), false)
-                        }}
+                        disabled={this.state.password.length === 0}
+                        onClick={() => this.submit()}
                     >{Messages.PASSWORD_SYSTEM.UNLOCK}</Button>
                     <Button
                         onClick={closeModal}

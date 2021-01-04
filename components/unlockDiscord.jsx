@@ -14,6 +14,28 @@ module.exports = class unlockDiscord extends React.Component {
             hidePassword: false,
             incorrect: false
         };
+        this.submit = () => {
+            const password = this.props.settings.get("password_Discord")
+            if(btoa(this.state.password) === password) {
+                const popouts = document.querySelector(`.${getModule(['popouts', 'popout'], false).popouts}`)
+                popouts.parentNode.insertBefore(this.props.app, popouts)
+                modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
+                const lastChangelog = this.props.settings.get('last_changelog', '');
+                const changelog = require('./changelog/changelogs.json');
+                if (changelog.id !== lastChangelog) {
+                    const changeLogExports = require("./changelog/changelogExports")
+                    changeLogExports.openChangeLogs(this.props.settings)
+                }
+                return
+            }
+            this.setState({ incorrect: true })
+            if(this.props.settings.get("openLink") === true) {
+                if(this.props.settings.get("LinkToOpen")) {
+                    electron.shell.openExternal(this.props.settings.get("LinkToOpen", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
+                }
+            }
+            this.render()
+        }
     }
 
     render() {
@@ -25,28 +47,7 @@ module.exports = class unlockDiscord extends React.Component {
                 <Modal.ModalContent>
                     <TextInputWithButton
                         onKeyPress={async (e) => {
-                            if(e.charCode == 13) {
-                                const password = this.props.settings.get("password_Discord")
-                                if(btoa(this.state.password) === password) {
-                                    const popouts = document.querySelector(`.${getModule(['popouts', 'popout'], false).popouts}`)
-                                    popouts.parentNode.insertBefore(this.props.app, popouts)
-                                    modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
-                                    const lastChangelog = this.props.settings.get('last_changelog', '');
-                                    const changelog = require('./changelog/changelogs.json');
-                                    if (changelog.id !== lastChangelog) {
-                                        const changeLogExports = require("./changelog/changelogExports")
-                                        changeLogExports.openChangeLogs(this.props.settings)
-                                    }
-                                    return
-                                }
-                                this.setState({ incorrect: true })
-                                if(this.props.settings.get("openLink") === true) {
-                                    if(this.props.settings.get("LinkToOpen")) {
-                                        electron.shell.openExternal(this.props.settings.get("LinkToOpen", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
-                                    }
-                                }
-                                this.render()
-                            }
+                            if(e.charCode == 13) this.submit()
                         }}
                         textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
                         buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
@@ -71,28 +72,7 @@ module.exports = class unlockDiscord extends React.Component {
                 <Modal.ModalFooter>
                     <Button
                         disabled={this.state.password.length === 0}
-                        onClick={() => {
-                            const password = this.props.settings.get("password_Discord")
-                            if(btoa(this.state.password) === password) {
-                                const popouts = document.querySelector(`.${getModule(['popouts', 'popout'], false).popouts}`)
-                                popouts.parentNode.insertBefore(this.props.app, popouts)
-                                modalStack.closeModal(modalStack.useModalsStore.getState().default[0].key)
-                                const lastChangelog = this.props.settings.get('last_changelog', '');
-                                const changelog = require('./changelog/changelogs.json');
-                                if (changelog.id !== lastChangelog) {
-                                    const changeLogExports = require("./changelog/changelogExports")
-                                    changeLogExports.openChangeLogs(this.props.settings)
-                                }
-                                return
-                            }
-                            this.setState({ incorrect: true })
-                            if(this.props.settings.get("openLink") === true) {
-                                if(this.props.settings.get("LinkToOpen")) {
-                                    electron.shell.openExternal(this.props.settings.get("LinkToOpen", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
-                                }
-                            }
-                            this.render()
-                        }}
+                        onClick={() => {this.submit()}}
                     >{Messages.PASSWORD_SYSTEM.UNLOCK}</Button>
                 </Modal.ModalFooter>
             </Modal.ModalRoot>

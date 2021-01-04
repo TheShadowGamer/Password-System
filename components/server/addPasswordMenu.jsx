@@ -10,16 +10,13 @@ module.exports = class addPasswordMenu extends React.Component {
 
     this.state = {
         password: "",
-        userHasInputed: false,
         fieldType: false
     };
-    this.hasUserInputed = () => {
-        if (!this.state.password) {
-            this.setState({ userHasInputed: false });
-        } else {
-            this.setState({ userHasInputed: true });
-        }
-    };
+    this.submit = () => {
+        this.props.settings.set("server_" + this.props.args[0].guild.id.toString(), btoa(this.state.password))
+        this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
+        closeModal();
+    }
   }
 
     render() {
@@ -31,11 +28,7 @@ module.exports = class addPasswordMenu extends React.Component {
                 <Modal.Content>
                     <TextInputWithButton
                         onKeyPress={async (e) => {
-                            if(e.charCode == 13) {
-                                this.props.settings.set("server_" + this.props.args[0].guild.id.toString(), btoa(this.state.password))
-                                this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
-                                closeModal();
-                            }
+                            if(e.charCode == 13) this.submit()
                         }}
                         textBoxId={"PASSWORD-SYSTEM-ADD-PASSWORD-FOLDER"}
                         buttonIcon={`${this.state.fieldType ? `far fa-eye` : `far fa-eye-slash`}`}
@@ -53,18 +46,13 @@ module.exports = class addPasswordMenu extends React.Component {
                         }}
                         onChange={async (o) => {
                             await this.setState({ password: o.toString() });
-                            this.hasUserInputed();
                         }}
                     >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextInputWithButton>
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
-                        disabled={!this.state.userHasInputed}
-                        onClick={() => {
-                            this.props.settings.set("server_" + this.props.args[0].guild.id.toString(), btoa(this.state.password))
-                            this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
-                            closeModal();
-                        }}
+                        disabled={this.state.password.length === 0}
+                        onClick={() => this.submit()}
                     >{Messages.PASSWORD_SYSTEM.SET_PASSWORD}</Button>
                     <Button
                         onClick={closeModal}

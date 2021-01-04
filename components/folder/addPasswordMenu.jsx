@@ -5,19 +5,19 @@ const { Modal } = require("powercord/components/modal");
 const { close: closeModal } = require("powercord/modal");
 
 module.exports = class addPasswordMenu extends React.Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-        password: "",
-        fieldType: false
-    };
-    this.submit = () => {
-        this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
-        this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
-        closeModal();
+        this.state = {
+            password: "",
+            fieldType: false
+        };
+        this.submit = () => {
+            this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
+            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
+            closeModal();
+        }
     }
-  }
 
     render() {
         return (

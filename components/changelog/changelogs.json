@@ -1,6 +1,6 @@
 {
-  "id": "update-2021-1-1",
-  "date": "2021-1-1",
+  "id": "support-server",
+  "date": "2021-1-4",
   "contents": [
     {
       "type": "HEADER",
@@ -11,9 +11,7 @@
     {
       "type": "CONTENTS",
       "list": [
-        "Added i18n (Internationalization) support! Open a PR on the Github to contribute!",
-        "Added a show/hide button for passwords!",
-        "Hitting enter should enter your password now instead of making a new line! (except for the manage password screens)"
+        "Made a discord to suggest features or get help with my plugins! https://discord.gg/bxCF9z6UvU"
       ]
     }
   ],

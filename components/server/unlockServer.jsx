@@ -11,16 +11,18 @@ module.exports = class unlockServer extends React.Component {
         this.state = {
             password: "",
             hidePassword: false,
-            userHasInputed: false,
             incorrect: false
         };
-        this.hasUserInputed = () => {
-            if (!this.state.password) {
-                this.setState({ userHasInputed: false });
-            } else {
-                this.setState({ userHasInputed: true });
+        this.submit = () => {
+            const password = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
+            if(btoa(this.state.password) === password) {
+                this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), true)
+                return closeModal()
             }
-        };
+            this.setState({ incorrect: true })
+            this.render()
+            this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
+        }
     }
 
     render() {
@@ -32,16 +34,7 @@ module.exports = class unlockServer extends React.Component {
                 <Modal.Content>
                     <TextInputWithButton
                         onKeyPress={async (e) => {
-                            if(e.charCode == 13) {
-                                const password = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
-                                if(btoa(this.state.password) === password) {
-                                    this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), true)
-                                    return closeModal()
-                                }
-                                this.setState({ incorrect: true })
-                                this.render()
-                                this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
-                            }
+                            if(e.charCode == 13) this.submit()
                         }}
                         textBoxId={"PASSWORD-SYSTEM-CURRENT-PASSWORD"}
                         buttonIcon={`${this.state.hidePassword ? `far fa-eye` : `far fa-eye-slash`}`}
@@ -68,14 +61,7 @@ module.exports = class unlockServer extends React.Component {
                     <Button
                         disabled={!this.state.userHasInputed}
                         onClick={() => {
-                            const password = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
-                            if(btoa(this.state.password) === password) {
-                                this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), true)
-                                return closeModal()
-                            }
-                            this.setState({ incorrect: true })
-                            this.render()
-                            this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
+                            this.submit()
                         }}
                     >{Messages.PASSWORD_SYSTEM.UNLOCK}</Button>
                     <Button

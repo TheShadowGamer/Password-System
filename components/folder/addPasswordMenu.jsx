@@ -5,22 +5,19 @@ const { Modal } = require("powercord/components/modal");
 const { close: closeModal } = require("powercord/modal");
 
 module.exports = class addPasswordMenu extends React.Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-        password: "",
-        userHasInputed: false,
-        fieldType: false
-    };
-    this.hasUserInputed = () => {
-        if (!this.state.password) {
-            this.setState({ userHasInputed: false });
-        } else {
-            this.setState({ userHasInputed: true });
+        this.state = {
+            password: "",
+            fieldType: false
+        };
+        this.submit = () => {
+            this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
+            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
+            closeModal();
         }
-    };
-  }
+    }
 
     render() {
         return (
@@ -31,11 +28,7 @@ module.exports = class addPasswordMenu extends React.Component {
                 <Modal.Content>
                     <TextInputWithButton
                         onKeyPress={async (e) => {
-                            if(e.charCode == 13) {
-                                this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
-                                this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
-                                closeModal();
-                            }
+                            if(e.charCode == 13) this.submit()
                         }}
                         textBoxId={"PASSWORD-SYSTEM-ADD-PASSWORD-FOLDER"}
                         buttonIcon={`${this.state.fieldType ? `far fa-eye` : `far fa-eye-slash`}`}
@@ -53,17 +46,14 @@ module.exports = class addPasswordMenu extends React.Component {
                         }}
                         onChange={async (o) => {
                             await this.setState({ password: o.toString() });
-                            this.hasUserInputed();
                         }}
                     >{Messages.PASSWORD_SYSTEM.PASSWORD}</TextInputWithButton>
                 </Modal.Content>
                 <Modal.Footer>
                     <Button
-                        disabled={!this.state.userHasInputed}
+                        disabled={this.state.password.length === 0}
                         onClick={() => {
-                            this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
-                            this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
-                            closeModal();
+                            this.submit()
                         }}
                     >{Messages.PASSWORD_SYSTEM.SET_PASSWORD}</Button>
                     <Button

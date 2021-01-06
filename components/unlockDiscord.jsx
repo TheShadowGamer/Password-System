@@ -15,6 +15,7 @@ module.exports = class unlockDiscord extends React.Component {
             incorrect: false
         };
         this.submit = () => {
+            if(this.state.password.length === 0) return
             const password = this.props.settings.get("password_Discord")
             if(btoa(this.state.password) === password) {
                 const popouts = document.querySelector(`.${getModule(['popouts', 'popout'], false).popouts}`)

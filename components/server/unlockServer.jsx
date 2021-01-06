@@ -14,6 +14,7 @@ module.exports = class unlockServer extends React.Component {
             incorrect: false
         };
         this.submit = () => {
+            if(this.state.password.length === 0) return
             const password = this.props.settings.get("server_" + this.props.args[0].guild.id.toString())
             if(btoa(this.state.password) === password) {
                 this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), true)

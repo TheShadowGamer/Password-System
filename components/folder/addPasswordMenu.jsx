@@ -13,6 +13,7 @@ module.exports = class addPasswordMenu extends React.Component {
             fieldType: false
         };
         this.submit = () => {
+            if(this.state.password.length === 0) return
             this.props.settings.set("folder_" + this.props.args[0].folderId, btoa(this.state.password))
             this.props.settings.set("unlocked_folder_" + this.props.args[0].folderId, false)
             closeModal();

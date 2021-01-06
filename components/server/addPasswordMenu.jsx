@@ -13,6 +13,7 @@ module.exports = class addPasswordMenu extends React.Component {
         fieldType: false
     };
     this.submit = () => {
+        if(this.state.password.length === 0) return
         this.props.settings.set("server_" + this.props.args[0].guild.id.toString(), btoa(this.state.password))
         this.props.settings.set("unlocked_server_" + this.props.args[0].guild.id.toString(), false)
         closeModal();

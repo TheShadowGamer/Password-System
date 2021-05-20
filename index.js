@@ -258,7 +258,7 @@ module.exports = class PasswordFolder extends Plugin {
         const password = await this.settings.get("password_Discord")
         if(!password) return;
         const {openModal: openNewModal} = getModule(['openModal'], false)
-        const e = await getModule(m => m.app && Object.keys(m).length === 1, false).app
+        const e = await getModule(m => m.app && Object.keys(m).length === 2, false).app
         const app = await document.querySelector(`.${e}`)
         app.remove()
         openNewModal((props) => React.createElement(unlockDiscord, {settings: this.settings, app: app, ...props}), {onCloseRequest: () => {}})
